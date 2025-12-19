@@ -10,7 +10,7 @@ import otpRoutes from "./routes/otp.registration.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import trackingOtpRoutes from "./routes/otp.tracking.routes.js";
 
-
+import translateRoutes from "./routes/translate.routes.js";
 
 const app = express();
 const port = 3001;
@@ -27,7 +27,7 @@ app.set("trust proxy", 1);
 
 // create tables on startup (demo-safe)
 CreateTables();
-
+app.use("/api/translate", translateRoutes);
 // routes
 app.use("/api/registration", otpRoutes);
 app.use("/api/complaints", complaintRoutes);
