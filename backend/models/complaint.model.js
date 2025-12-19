@@ -149,3 +149,22 @@ export const updateComplaintStatusById = async (complaintId, status) => {
   const { rows } = await db.query(query, [status, complaintId]);
   return rows[0];
 };
+
+export const resolveComplaintById = async (complaintId, finalResponse) => {
+  const query = `
+    UPDATE complaints
+    SET
+      final_response = $1,
+      status = 'RESOLVED',
+      resolved_at = NOW()
+    WHERE complaint_id = $2
+    RETURNING *;
+  `;
+
+  const { rows } = await db.query(query, [
+    finalResponse,
+    complaintId,
+  ]);
+
+  return rows[0];
+};

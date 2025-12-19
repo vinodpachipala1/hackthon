@@ -21,7 +21,7 @@ export const CreateTables = async () => {
       incident_date DATE,
       city VARCHAR(100),
       pincode VARCHAR(10),
-
+      final_response TEXT,
       /* ---- AI GENERATED FIELDS ---- */
       ai_category VARCHAR(100),
       department VARCHAR(100),
@@ -137,7 +137,7 @@ export const CreateTables = async () => {
 
     `);
 
-    console.log("✅ All tables created successfully");
+    console.log("✅ All tables created successfully"); 
   } catch (err) {
     console.error("❌ Error creating tables:", err);
   }

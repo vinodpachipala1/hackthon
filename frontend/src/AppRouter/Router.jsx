@@ -7,15 +7,21 @@ import OfficerLoginPage from "../pages/OfficerLoginPage";
 import OfficerDashboardPage from "../pages/dashboard";
 import ComplaintDetailPage from "../pages/ViewDetailPage";
 import FAQPage from "../pages/FaqPage";
-
+import OfficerDashboardPages from "../pages/OfficerDashboard";
+import OfficerLayout from "../components/OfficerLayout";
 const Router = () => {
   return (
     <BrowserRouter>
+    
       <Routes>
-        
-        <Route path="/officer/login" element = {<OfficerLoginPage />} />
+        <Route element={<OfficerLayout />} >
         <Route path="/officer/dashboard" element = {<OfficerDashboardPage />} />
         <Route path="/officer/complaints/:id" element = {<ComplaintDetailPage />} />
+        </Route>
+        
+        <Route path="/officer/login" element = {<OfficerLoginPage />} />
+        
+        
         <Route element={<Layout />}>
           <Route path="/register-complaint" element={<ComplaintForm />} />
           

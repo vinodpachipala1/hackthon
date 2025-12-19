@@ -211,74 +211,7 @@ const ComplaintDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header - Same as Dashboard */}
-      <div className="bg-white shadow-lg border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <button
-                onClick={() => navigate("/officer/dashboard")}
-                className="mr-4 text-gray-600 hover:text-gray-900"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
-                </svg>
-              </button>
-              <div className="bg-gradient-to-br from-red-600 to-red-800 p-2 rounded-lg mr-3">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  Complaint Details
-                </h1>
-                <p className="text-sm text-gray-600">
-                  Officer:{" "}
-                  <span className="font-medium">
-                    {localStorage.getItem("officer_email") || "Officer"}
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate("/officer/dashboard")}
-                className="text-gray-600 hover:text-gray-900 font-medium"
-              >
-                Dashboard
-              </button>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 border border-red-600 text-red-600 font-medium rounded-lg hover:bg-red-50 transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Success Message */}
@@ -520,31 +453,6 @@ const ComplaintDetailPage = () => {
                   </span>
                 </div>
 
-                <div>
-                  <span className="text-gray-700 mb-2 block">
-                    Priority Reasons:
-                  </span>
-                  <ul className="space-y-2">
-                    {complaint.priority_reasons?.map((reason, index) => (
-                      <li key={index} className="flex items-start">
-                        <svg
-                          className="w-4 h-4 text-red-500 mr-2 mt-0.5 flex-shrink-0"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.698-.833-2.464 0L4.34 16.5c-.77.833.192 2.5 1.732 2.5z"
-                          />
-                        </svg>
-                        <span className="text-gray-600">{reason}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </div>
             </div>
           </div>
@@ -594,69 +502,133 @@ const ComplaintDetailPage = () => {
               </div>
             </div>
 
-            {/* Officer Response */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Final Response
-              </h3>
+            {/* Final Response Section - Different based on status */}
+            {complaint.status === "RESOLVED" ? (
+              /* Display Final Response when resolved */
+              <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl shadow-lg border border-green-200 p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                  <svg
+                    className="w-5 h-5 mr-2 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  Final Response Sent
+                </h3>
 
-              <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Edit and finalize response
-                </label>
-                <textarea
-                  value={finalResponse}
-                  onChange={(e) => setFinalResponse(e.target.value)}
-                  rows="8"
-                  className="w-full border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors resize-none"
-                  placeholder="Edit the AI-suggested response or write your own..."
-                />
-              </div>
+                <div className="bg-white p-4 rounded-lg border border-green-200 mb-4">
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {complaint.final_response || "No final response provided"}
+                  </p>
+                </div>
 
-              <div className="space-y-4">
-                <button
-                  onClick={submitResponse}
-                  disabled={isSubmitting || !finalResponse.trim()}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-3 px-6 rounded-lg hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <svg
-                        className="animate-spin h-5 w-5 mr-3 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                        />
-                      </svg>
-                      Sending Response...
-                    </>
-                  ) : (
-                    "Approve & Send Response"
-                  )}
-                </button>
-
-                <div className="text-sm text-gray-600">
-                  This will:
-                  <ul className="list-disc ml-5 mt-1 space-y-1">
-                    <li>Mark the complaint as RESOLVED</li>
-                    <li>Send email response to complainant</li>
-                    <li>Close this case</li>
-                  </ul>
+                <div className="flex items-center justify-between text-sm">
+                  <div className="text-green-600 flex items-center">
+                    <svg
+                      className="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Resolved on: {new Date(complaint.updated_at || complaint.created_at).toLocaleString()}
+                  </div>
+                  <div className="text-green-600 flex items-center">
+                    <svg
+                      className="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    By: Officer
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              /* Officer Response Form when NOT resolved */
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  Final Response
+                </h3>
+
+                <div className="mb-6">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Edit and finalize response
+                  </label>
+                  <textarea
+                    value={finalResponse}
+                    onChange={(e) => setFinalResponse(e.target.value)}
+                    rows="8"
+                    className="w-full border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors resize-none"
+                    placeholder="Edit the AI-suggested response or write your own..."
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  <button
+                    onClick={submitResponse}
+                    disabled={isSubmitting || !finalResponse.trim()}
+                    className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-3 px-6 rounded-lg hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg
+                          className="animate-spin h-5 w-5 mr-3 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                          />
+                        </svg>
+                        Sending Response...
+                      </>
+                    ) : (
+                      "Approve & Send Response"
+                    )}
+                  </button>
+
+                  <div className="text-sm text-gray-600">
+                    This will:
+                    <ul className="list-disc ml-5 mt-1 space-y-1">
+                      <li>Mark the complaint as RESOLVED</li>
+                      <li>Send email response to complainant</li>
+                      <li>Close this case</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* AI Feedback Modal */}
             {showAiFeedback && (

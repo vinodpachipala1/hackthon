@@ -3,7 +3,9 @@ import {
   getComplaintById,
   getAllComplaints,
   updateComplaintStatusById,
+  resolveComplaintById,
 } from "../models/complaint.model.js";
+import { sendEmail } from "../config/mailer.js";
 
 /* ===============================
    GENERATE COMPLAINT ID
@@ -104,32 +106,102 @@ export const getComplaints = async (req, res) => {
    PUT /api/complaints/:complaintId/status
    Officer only
 ================================================= */
+
 export const changeComplaintStatus = async (req, res) => {
-  
   try {
-    const complaintId  = req.params.id;
+    const { id } = req.params;
     const { status } = req.body;
 
-    if (!status) {
-      return res.status(400).json({ message: "Status is required" });
-    }
+    const complaint = await updateComplaintStatusById(id, status);
 
-    
-    const updatedComplaint = await updateComplaintStatusById(
-      complaintId,
-      status
-    );
-
-    if (!updatedComplaint) {
+    if (!complaint) {
       return res.status(404).json({ message: "Complaint not found" });
     }
 
-    return res.status(200).json({
-      message: "Complaint status updated successfully",
-      complaint: updatedComplaint,
-    });
-  } catch (error) {
-    console.error("Update Status Error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    /* ===============================
+       SEND EMAIL BASED ON STATUS
+    =============================== */
+
+    if (status === "IN_PROGRESS") {
+      await sendEmail(
+        complaint.email,
+        "India Post: Complaint Under Investigation",
+        `
+        <p>Dear Citizen,</p>
+
+        <p>Your complaint <b>${complaint.complaint_id}</b> is now under investigation.</p>
+
+        <p>Our officer has started reviewing the issue and you will receive further updates.</p>
+
+        <p>Status: <b>In Progress</b></p>
+
+        <p>Regards,<br/>
+        India Post Grievance Redressal Team</p>
+        `
+      );
+    }
+
+    if (status === "RESOLVED") {
+      await sendEmail(
+        complaint.email,
+        "India Post: Complaint Resolved",
+        `
+        <p>Dear Citizen,</p>
+
+        <p>Your complaint <b>${complaint.complaint_id}</b> has been resolved.</p>
+
+        <p><b>Resolution:</b></p>
+        <p>${complaint.auto_response || "Thank you for contacting India Post."}</p>
+
+        <p>If you need further assistance, feel free to contact us.</p>
+
+        <p>Regards,<br/>
+        India Post Grievance Redressal Team</p>
+        `
+      );
+    }
+
+    return res.json(complaint);
+  } catch (err) {
+    console.error("Update Status Error:", err);
+    return res.status(500).json({ message: "Failed to update status" });
+  }
+};
+
+
+export const resolveComplaint = async (req, res) => {
+  console.log(req.params)
+  try {
+    const { id } = req.params;
+    const { final_response } = req.body;
+
+    if (!final_response || final_response.trim().length < 10) {
+      return res.status(400).json({
+        message: "Final response is required before approval",
+      });
+    }
+
+    // 1️⃣ Update DB FIRST (single source of truth)
+    const complaint = await resolveComplaintById(
+      id,
+      final_response
+    );
+
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
+
+    // 2️⃣ Send email AFTER approval (async, non-blocking)
+    sendEmail(
+      complaint.email,
+      complaint.complaint_id,
+      final_response
+    ).catch(err => console.error("Email error:", err));
+
+    // 3️⃣ Respond to frontend
+    res.json(complaint);
+  } catch (err) {
+    console.error("Resolve complaint failed:", err);
+    res.status(500).json({ message: "Failed to resolve complaint" });
   }
 };
