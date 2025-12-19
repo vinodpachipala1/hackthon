@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Base_url from "../components/Base_url";
-
+import { Frown, Meh, Smile } from "lucide-react";
 const ComplaintDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,14 +21,11 @@ const ComplaintDetailPage = () => {
 
         const token = localStorage.getItem("officer_token");
 
-        const res = await fetch(
-          `${Base_url}/complaints/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(`${Base_url}/complaints/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!res.ok) {
           throw new Error("Failed to fetch complaint");
@@ -52,17 +49,14 @@ const ComplaintDetailPage = () => {
     try {
       const token = localStorage.getItem("officer_token");
 
-      const res = await fetch(
-        `${Base_url}/complaints/${id}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
-      );
+      const res = await fetch(`${Base_url}/complaints/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
 
       if (!res.ok) throw new Error("Failed to update status");
 
@@ -88,23 +82,19 @@ const ComplaintDetailPage = () => {
     return "text-green-600";
   };
 
-
   const submitResponse = async () => {
     try {
       setIsSubmitting(true);
       const token = localStorage.getItem("officer_token");
 
-      const res = await fetch(
-        `${Base_url}/complaints/${id}/resolve`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ final_response: finalResponse }),
-        }
-      );
+      const res = await fetch(`${Base_url}/complaints/${id}/resolve`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ final_response: finalResponse }),
+      });
 
       if (!res.ok) throw new Error("Failed to resolve complaint");
 
@@ -211,8 +201,6 @@ const ComplaintDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Success Message */}
         {success && (
@@ -421,38 +409,79 @@ const ComplaintDetailPage = () => {
               </h3>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Sentiment Analysis:</span>
-                  <div className="flex items-center">
-                    <span
-                      className={`font-bold mr-2 ${getSentimentColor(
-                        complaint.sentiment_score
-                      )}`}
-                    >
-                      {(complaint.sentiment_score * 100).toFixed(0)}%
-                    </span>
-                    <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${getSentimentColor(
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">Sentiment Analysis:</span>
+
+                    <div className="flex items-center gap-3">
+                      {/* Percentage Score Text */}
+                      <span
+                        className={`font-bold ${getSentimentColor(
                           complaint.sentiment_score
-                        ).replace("text-", "bg-")}`}
-                        style={{
-                          width: `${
-                            Math.abs(complaint.sentiment_score) * 100
-                          }%`,
-                        }}
-                      ></div>
+                        )}`}
+                      >
+                        {(complaint.sentiment_score * 100).toFixed(0)}%
+                      </span>
+
+                      {/* Bar with Icons Scale */}
+                      <div className="flex flex-col w-32">
+                        {/* Icons Legend: Start, Middle, End */}
+                        <div className="flex justify-between text-gray-400 mb-1 px-0.5">
+                          {/* 0% - Negative */}
+                          <Frown
+                            size={16}
+                            className={
+                              complaint.sentiment_score <= 0.3
+                                ? "text-red-500"
+                                : ""
+                            }
+                          />
+
+                          {/* 50% - Neutral */}
+                          <Meh
+                            size={16}
+                            className={
+                              complaint.sentiment_score > 0.3 &&
+                              complaint.sentiment_score < 0.7
+                                ? "text-yellow-500"
+                                : ""
+                            }
+                          />
+
+                          {/* 100% - Positive */}
+                          <Smile
+                            size={16}
+                            className={
+                              complaint.sentiment_score >= 0.7
+                                ? "text-green-500"
+                                : ""
+                            }
+                          />
+                        </div>
+
+                        {/* The Progress Bar */}
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full transition-all duration-500 ${getSentimentColor(
+                              complaint.sentiment_score
+                            ).replace("text-", "bg-")}`}
+                            style={{
+                              width: `${
+                                Math.abs(complaint.sentiment_score) * 100
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-
                 <div>
                   <span className="text-gray-700 mb-2 block">Category:</span>
                   <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                     {complaint.ai_category}
                   </span>
                 </div>
-
               </div>
             </div>
           </div>
@@ -544,7 +573,10 @@ const ComplaintDetailPage = () => {
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    Resolved on: {new Date(complaint.updated_at || complaint.created_at).toLocaleString()}
+                    Resolved on:{" "}
+                    {new Date(
+                      complaint.updated_at || complaint.created_at
+                    ).toLocaleString()}
                   </div>
                   <div className="text-green-600 flex items-center">
                     <svg
