@@ -97,13 +97,39 @@ export const verifyRegistrationOtpAndCreateComplaint = async (req, res) => {
 
     await sendEmail(
       email,
-      "India Post Complaint Registered Successfully",
+      `Complaint Acknowledgement - Ticket #${complaintId}`, // Formal Subject Line
       `
-    <p>Your complaint has been successfully registered.</p>
-    <p><b>Complaint ID:</b> ${complaintId}</p>
-    <p><b>Priority:</b> ${ai.priority_level}</p>
-    <p><b>Department:</b> ${ai.department}</p>
-    <p>${ai.auto_response}</p>
+  <div style="font-family: Arial, sans-serif; max-width: 600px; color: #333;">
+    <h2 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 10px;">
+      India Post Grievance Redressal
+    </h2>
+    
+    <p>Dear Customer,</p>
+    
+    <p>This is to acknowledge that your complaint has been officially registered with the Department of Posts.</p>
+    
+    <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #d32f2f; margin: 20px 0;">
+      <p style="margin: 5px 0;"><strong>Complaint ID:</strong> ${complaintId}</p>
+      <p style="margin: 5px 0;"><strong>Assigned Department:</strong> ${ai.department}</p>
+    </div>
+
+    <p><strong>Preliminary Assessment:</strong></p>
+    <p style="font-style: italic; color: #555;">
+      "${ai.auto_response}"
+    </p>
+
+    <p>Your issue has been forwarded to the concerned department for immediate action. You will receive further updates shortly.</p>
+    
+    <br>
+    <p>Regards,</p>
+    <p><strong>Customer Care Division</strong><br>India Post</p>
+    
+    <hr style="border: none; border-top: 1px solid #eee; margin-top: 20px;">
+    <p style="font-size: 12px; color: #888;">
+      This is an automated message. Please do not reply to this email.<br>
+      Department of Posts, Ministry of Communications, Government of India.
+    </p>
+  </div>
   `
     );
 

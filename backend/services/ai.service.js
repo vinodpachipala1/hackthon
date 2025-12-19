@@ -16,11 +16,7 @@ class AIService {
     }
   }
 
-  async analyzeComplaintWithAI({
-    serviceType,
-    complaintType,
-    complaintText,
-  }) {
+  async analyzeComplaintWithAI({ serviceType, complaintType, complaintText }) {
     try {
       console.log("AI analyzeComplaintWithAI called");
       console.log("this.ai =", this.ai);
@@ -41,15 +37,23 @@ ${complaintType}
 COMPLAINT DESCRIPTION:
 "${complaintText || "No description provided"}"
 
+### SENTIMENT ANALYSIS GUIDELINES (Scale 0.0 to 1.0):
+Analyze the "COMPLAINT DESCRIPTION" tone and map it to a 0.0 - 1.0 scale:
+- **0.0 to 0.3**: Extremely Negative (Hostile, mentions fraud, theft, legal action, or shouting).
+- **0.3 to 0.4**: Negative (Frustrated, disappointed, complaining about delays).
+- **0.5**: Neutral (Factual inquiry, status tracking, robot-like tone).
+- **0.6 to 1.0**: Positive (Constructive feedback, appreciation, polite resolution).
+
+### OUTPUT FORMAT:
 Respond ONLY with a valid JSON object in this exact format.
 Do not add explanations, markdown, or extra text.
 
 {
-  "ai_category": "",
-  "department": "",
-  "sentiment_score": 0,
+  "ai_category": "The specific technical category of the issue",
+  "department": "The relevant India Post department",
+  "sentiment_score": 0.0, // Float between 0.0 (Worst) and 1.0 (Best)
   "priority_level": "LOW | MEDIUM | HIGH | CRITICAL",
-  "auto_response": ""
+  "auto_response": "A polite, empathetic, and professional response to the citizen."
 }
 `;
 

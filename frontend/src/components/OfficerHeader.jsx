@@ -38,17 +38,15 @@ const Header = () => {
 
             <div className="ml-2">
               <div className="flex items-baseline">
-                <h1 className="text-xl font-bold tracking-wide">
-                  Officer Dashboard
-                </h1>
+                <h1 className="text-2xl font-bold tracking-wide">भारतीय डाक</h1>
                 <div className="ml-3 bg-white text-red-700 px-2 py-1 rounded text-xs font-bold">
-                  भारतीय डाक
+                  INDIA POST
                 </div>
               </div>
               <div className="flex items-center mt-1">
-                <div className="w-12 h-1 bg-yellow-400 mr-2"></div>
-                <p className="text-xs text-yellow-100 font-medium">
-                  Complaint Management Portal
+                <div className="w-16 h-1 bg-yellow-400 mr-2"></div>
+                <p className="text-sm text-yellow-100 font-medium">
+                  Ministry of Communications
                 </p>
               </div>
             </div>
