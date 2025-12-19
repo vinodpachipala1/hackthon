@@ -2,7 +2,7 @@ import {
   createComplaint,
   getComplaintById,
   getAllComplaints,
-  updateComplaintStatus,
+  updateComplaintStatusById,
 } from "../models/complaint.model.js";
 
 /* ===============================
@@ -105,15 +105,17 @@ export const getComplaints = async (req, res) => {
    Officer only
 ================================================= */
 export const changeComplaintStatus = async (req, res) => {
+  
   try {
-    const { complaintId } = req.params;
+    const complaintId  = req.params.id;
     const { status } = req.body;
 
     if (!status) {
       return res.status(400).json({ message: "Status is required" });
     }
 
-    const updatedComplaint = await updateComplaintStatus(
+    
+    const updatedComplaint = await updateComplaintStatusById(
       complaintId,
       status
     );

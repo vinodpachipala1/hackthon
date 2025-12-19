@@ -19,7 +19,7 @@ const Layout = ({ isAdmin, setIsAdmin }) => {
         {/* Content container with refined styling */}
         <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8 relative z-10">
           {/* Page content wrapper with subtle elevation */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-red-100/50 p-6 md:p-8 lg:p-10 min-h-[calc(100vh-280px)]">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-red-100/50   min-h-[calc(100vh-280px)]">
             <Outlet />
           </div>
         </div>

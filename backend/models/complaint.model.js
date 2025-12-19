@@ -131,14 +131,16 @@ export const getComplaintById = async (complaintId) => {
 /* ===============================
    UPDATE STATUS (OFFICER)
 =============================== */
-export const updateComplaintStatus = async (complaintId, status) => {
+export const updateComplaintStatusById = async (complaintId, status) => {
+  console.log(complaintId, status);
+
   const query = `
     UPDATE complaints
     SET
-      status = $1,
+      status = $1::VARCHAR,
       resolved_at = CASE
-        WHEN $1 = 'RESOLVED' THEN NOW()
-        ELSE resolved_at
+        WHEN $1::VARCHAR = 'RESOLVED' THEN NOW()
+        ELSE NULL
       END
     WHERE complaint_id = $2
     RETURNING *;

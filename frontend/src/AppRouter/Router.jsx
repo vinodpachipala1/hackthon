@@ -6,6 +6,7 @@ import ComplaintTrackingPage from "../pages/ComplaintTrackingPage";
 import OfficerLoginPage from "../pages/OfficerLoginPage";
 import OfficerDashboardPage from "../pages/dashboard";
 import ComplaintDetailPage from "../pages/ViewDetailPage";
+import FAQPage from "../pages/FaqPage";
 
 const Router = () => {
   return (
@@ -18,7 +19,7 @@ const Router = () => {
         <Route element={<Layout />}>
           <Route path="/register-complaint" element={<ComplaintForm />} />
           
-          
+          <Route path="/faq" element={<FAQPage />} />
           <Route path="/" element={<HomePage />} />
           
           <Route path="/track-complaint" element={<ComplaintTrackingPage />} />

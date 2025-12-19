@@ -135,7 +135,6 @@ export const CreateTables = async () => {
 );
 
 
-
     `);
 
     console.log("✅ All tables created successfully");
